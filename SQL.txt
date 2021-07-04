@@ -1,0 +1,94 @@
+BEGIN;
+--
+-- Create model Admins
+--
+CREATE TABLE "Informationapp_admins" ("admin_id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "name" varchar(45) NOT NULL);
+--
+-- Create model Department
+--
+CREATE TABLE "Informationapp_department" ("iddepartment" integer NOT NULL PRIMARY KEY, "name" varchar(45) NULL, "departmentcol" varchar(45) NULL);
+--
+-- Create model Doctor
+--
+CREATE TABLE "Informationapp_doctor" ("iddoctor" integer NOT NULL PRIMARY KEY, "name" varchar(45) NULL, "gender" varchar(45) NULL, "pressent" text NULL, "department_iddepartment_id" integer NOT NULL REFERENCES "Informationapp_department" ("iddepartment") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Create model Hospital
+--
+CREATE TABLE "Informationapp_hospital" ("hospital_id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "name" varchar(45) NOT NULL);
+--
+-- Create model Manger
+--
+CREATE TABLE "Informationapp_manger" ("idmanger" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "hospital" varchar(45) NULL, "admin_id_id" integer NOT NULL REFERENCES "Informationapp_admins" ("admin_id") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Create model Nurse
+--
+CREATE TABLE "Informationapp_nurse" ("idnurse" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "name" varchar(45) NULL, "gender" varchar(45) NULL, "pressent" varchar(45) NULL, "department_iddepartmentN_id" integer NOT NULL REFERENCES "Informationapp_department" ("iddepartment") DEFERRABLE INITIALLY DEFERRED, "manger_idmangerN_id" integer NOT NULL REFERENCES "Informationapp_manger" ("idmanger") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Create model Pathient
+--
+CREATE TABLE "Informationapp_pathient" ("idPathient" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "Name" varchar(45) NULL, "phone #" integer NULL, "Gender" varchar(45) NULL, "National id" integer NULL, "emergency contact #" integer NULL, "doctor_iddoctor_id" integer NOT NULL REFERENCES "Informationapp_doctor" ("iddoctor") DEFERRABLE INITIALLY DEFERRED, "nurse_idnurseP_id" integer NOT NULL REFERENCES "Informationapp_nurse" ("idnurse") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Create model Rooms
+--
+CREATE TABLE "Informationapp_rooms" ("idrooms" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "filled" varchar(45) NULL, "capacity" varchar(45) NULL, "degree" varchar(45) NULL, "department_iddepartment" integer NOT NULL REFERENCES "Informationapp_department" ("iddepartment") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Create model Report
+--
+CREATE TABLE "Informationapp_report" ("idreport" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "full report" varchar(45) NULL, "dignose" varchar(45) NULL, "date" varchar(45) NULL, "treatment" varchar(45) NULL, "required tests" varchar(45) NULL, "pathient_doctor_iddoctor_id" integer NOT NULL REFERENCES "Informationapp_pathient" ("idPathient") DEFERRABLE INITIALLY DEFERRED, "pathient_idpathient_id" integer NOT NULL REFERENCES "Informationapp_pathient" ("idPathient") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Create model Receptinist
+--
+CREATE TABLE "Informationapp_receptinist" ("idreceptinist" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "name" varchar(45) NULL, "hospital_hospital_idP_id" integer NOT NULL REFERENCES "Informationapp_hospital" ("hospital_id") DEFERRABLE INITIALLY DEFERRED, "manger_idmanger_id" integer NOT NULL REFERENCES "Informationapp_manger" ("idmanger") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Add field receptinist_idreceptinistP to pathient
+--
+CREATE TABLE "new__Informationapp_pathient" ("idPathient" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "Name" varchar(45) NULL, "phone #" integer NULL, "Gender" varchar(45) NULL, "National id" integer NULL, "emergency contact #" integer NULL, "doctor_iddoctor_id" integer NOT NULL REFERENCES "Informationapp_doctor" ("iddoctor") DEFERRABLE INITIALLY DEFERRED, "nurse_idnurseP_id" integer NOT NULL REFERENCES "Informationapp_nurse" ("idnurse") DEFERRABLE INITIALLY DEFERRED, "receptinist_idreceptinistP_id" integer NOT NULL REFERENCES "Informationapp_receptinist" ("idreceptinist") DEFERRABLE INITIALLY DEFERRED);
+INSERT INTO "new__Informationapp_pathient" ("idPathient", "Name", "phone #", "Gender", "National id", "emergency contact #", "doctor_iddoctor_id", "nurse_idnurseP_id", "receptinist_idreceptinistP_id") SELECT "idPathient", "Name", "phone #", "Gender", "National id", "emergency contact #", "doctor_iddoctor_id", "nurse_idnurseP_id", NULL FROM "Informationapp_pathient";
+DROP TABLE "Informationapp_pathient";
+ALTER TABLE "new__Informationapp_pathient" RENAME TO "Informationapp_pathient";
+CREATE INDEX "Informationapp_doctor_department_iddepartment_id_1ed30da3" ON "Informationapp_doctor" ("department_iddepartment_id");
+CREATE INDEX "Informationapp_manger_admin_id_id_44f10322" ON "Informationapp_manger" ("admin_id_id");
+CREATE INDEX "Informationapp_nurse_department_iddepartmentN_id_4a3f088c" ON "Informationapp_nurse" ("department_iddepartmentN_id");
+CREATE INDEX "Informationapp_nurse_manger_idmangerN_id_2a0e1793" ON "Informationapp_nurse" ("manger_idmangerN_id");
+CREATE INDEX "Informationapp_rooms_department_iddepartment_80b64a33" ON "Informationapp_rooms" ("department_iddepartment");
+CREATE INDEX "Informationapp_report_pathient_doctor_iddoctor_id_2159b74a" ON "Informationapp_report" ("pathient_doctor_iddoctor_id");
+CREATE INDEX "Informationapp_report_pathient_idpathient_id_aec4cc00" ON "Informationapp_report" ("pathient_idpathient_id");
+CREATE INDEX "Informationapp_receptinist_hospital_hospital_idP_id_133733c6" ON "Informationapp_receptinist" ("hospital_hospital_idP_id");
+CREATE INDEX "Informationapp_receptinist_manger_idmanger_id_3ba7e1a7" ON "Informationapp_receptinist" ("manger_idmanger_id");
+CREATE INDEX "Informationapp_pathient_doctor_iddoctor_id_b425aa70" ON "Informationapp_pathient" ("doctor_iddoctor_id");
+CREATE INDEX "Informationapp_pathient_nurse_idnurseP_id_5ea5658e" ON "Informationapp_pathient" ("nurse_idnurseP_id");
+CREATE INDEX "Informationapp_pathient_receptinist_idreceptinistP_id_43ba654d" ON "Informationapp_pathient" ("receptinist_idreceptinistP_id");
+--
+-- Add field idmanger to hospital
+--
+CREATE TABLE "new__Informationapp_hospital" ("hospital_id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "name" varchar(45) NOT NULL, "idmanger_id" integer NOT NULL REFERENCES "Informationapp_manger" ("idmanger") DEFERRABLE INITIALLY DEFERRED);
+INSERT INTO "new__Informationapp_hospital" ("hospital_id", "name", "idmanger_id") SELECT "hospital_id", "name", NULL FROM "Informationapp_hospital";
+DROP TABLE "Informationapp_hospital";
+ALTER TABLE "new__Informationapp_hospital" RENAME TO "Informationapp_hospital";
+CREATE INDEX "Informationapp_hospital_idmanger_id_4dc5d1fc" ON "Informationapp_hospital" ("idmanger_id");
+--
+-- Add field hospital_hospital_id to department
+--
+CREATE TABLE "new__Informationapp_department" ("iddepartment" integer NOT NULL PRIMARY KEY, "name" varchar(45) NULL, "departmentcol" varchar(45) NULL, "hospital_hospital_id_id" integer NOT NULL REFERENCES "Informationapp_hospital" ("hospital_id") DEFERRABLE INITIALLY DEFERRED);
+INSERT INTO "new__Informationapp_department" ("iddepartment", "name", "departmentcol", "hospital_hospital_id_id") SELECT "iddepartment", "name", "departmentcol", NULL FROM "Informationapp_department";
+DROP TABLE "Informationapp_department";
+ALTER TABLE "new__Informationapp_department" RENAME TO "Informationapp_department";
+CREATE INDEX "Informationapp_department_hospital_hospital_id_id_4b7d7597" ON "Informationapp_department" ("hospital_hospital_id_id");
+--
+-- Create model Bed
+--
+CREATE TABLE "Informationapp_bed" ("idBed" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "filled" varchar(45) NULL, "rooms_idrooms_id" integer NOT NULL REFERENCES "Informationapp_rooms" ("idrooms") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Create model PathientHasHospital
+--
+CREATE TABLE "Informationapp_pathienthashospital" ("Pathient_idPathient" integer NOT NULL PRIMARY KEY REFERENCES "Informationapp_pathient" ("idPathient") DEFERRABLE INITIALLY DEFERRED, "Hospital_ hospital ID" integer NOT NULL REFERENCES "Informationapp_hospital" ("hospital_id") DEFERRABLE INITIALLY DEFERRED);
+--
+-- Create model DoctorHasHospital
+--
+CREATE TABLE "Informationapp_doctorhashospital" ("doctor_iddoctorD_id" integer NOT NULL PRIMARY KEY REFERENCES "Informationapp_doctor" ("iddoctor") DEFERRABLE INITIALLY DEFERRED, "hospital_admin_admin_idD_id" integer NOT NULL REFERENCES "Informationapp_admins" ("admin_id") DEFERRABLE INITIALLY DEFERRED, "hospital_hospital_idD_id" integer NOT NULL REFERENCES "Informationapp_hospital" ("hospital_id") DEFERRABLE INITIALLY DEFERRED, "hospital_manger_idmangerD_id" integer NOT NULL REFERENCES "Informationapp_manger" ("idmanger") DEFERRABLE INITIALLY DEFERRED);
+CREATE INDEX "Informationapp_bed_rooms_idrooms_id_525bd574" ON "Informationapp_bed" ("rooms_idrooms_id");
+CREATE INDEX "Informationapp_pathienthashospital_Hospital_ hospital ID_841789bd" ON "Informationapp_pathienthashospital" ("Hospital_ hospital ID");
+CREATE INDEX "Informationapp_doctorhashospital_hospital_admin_admin_idD_id_6e328265" ON "Informationapp_doctorhashospital" ("hospital_admin_admin_idD_id");
+CREATE INDEX "Informationapp_doctorhashospital_hospital_hospital_idD_id_6a1d5044" ON "Informationapp_doctorhashospital" ("hospital_hospital_idD_id");
+CREATE INDEX "Informationapp_doctorhashospital_hospital_manger_idmangerD_id_591ea348" ON "Informationapp_doctorhashospital" ("hospital_manger_idmangerD_id");
+COMMIT;
