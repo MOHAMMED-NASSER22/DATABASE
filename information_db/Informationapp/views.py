@@ -18,3 +18,6 @@ def doctor(request):
 
 def patient(request):
     return render(request, 'Informationapp/patient.html')
+
+def Home(request):
+    return render(request, 'Informationapp/Home.html')
