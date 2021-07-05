@@ -7,6 +7,7 @@ class Admins(models.Model):
 
 class Manger(models.Model):
     idmanger = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=45)
     hospital = models.CharField(max_length=45, blank=True, null=True)
     admin_id = models.ForeignKey(Admins, on_delete=models.CASCADE, related_name='Admins_admin_id')
 
@@ -27,15 +28,15 @@ class Doctor(models.Model):
     iddoctor = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=45, blank=True, null=True)
     gender = models.CharField(max_length=45, blank=True, null=True)
-    pressent = models.BooleanField()
+    pressent = models.CharField(max_length=45, blank=True, null=True)
     department_iddepartment = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='department_iddepartment')
 
 
 class DoctorHasHospital(models.Model):
     doctor_iddoctorD = models.OneToOneField(Doctor, on_delete=models.CASCADE, related_name='doctor_iddoctorD', primary_key=True)
     hospital_hospital_idD = models.ForeignKey(Hospital, on_delete=models.CASCADE, related_name='hospital_hospital_idD')  # Field name made lowercase. Field renamed to remove unsuitable characters.
-    hospital_manger_idmangerD = models.ForeignKey(Manger, on_delete=models.CASCADE, related_name='hospital_manger_idmangerD')  # Field name made lowercase.
-    hospital_admin_admin_idD = models.ForeignKey(Admins, on_delete=models.CASCADE, related_name='hospital_admin_admin_idD')  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    # hospital_manger_idmangerD = models.ForeignKey(Manger, on_delete=models.CASCADE, related_name='hospital_manger_idmangerD')  # Field name made lowercase.
+    # hospital_admin_admin_idD = models.ForeignKey(Admins, on_delete=models.CASCADE, related_name='hospital_admin_admin_idD')  # Field name made lowercase. Field renamed to remove unsuitable characters.
 
 
 
@@ -45,14 +46,14 @@ class Nurse(models.Model):
     gender = models.CharField(max_length=45, blank=True, null=True)
     pressent = models.CharField(max_length=45, blank=True, null=True)
     department_iddepartmentN = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='department_iddepartmentN')
-    manger_idmangerN = models.ForeignKey(Manger, on_delete=models.CASCADE, related_name='manger_idmangerN')
+    # manger_idmangerN = models.ForeignKey(Manger, on_delete=models.CASCADE, related_name='manger_idmangerN')
 
 
 class Receptinist(models.Model):
     idreceptinist = models.AutoField(primary_key=True)
     name = models.CharField(max_length=45, blank=True, null=True)
-    manger_idmanger = models.ForeignKey(Manger, on_delete=models.CASCADE, related_name='manger_idmanger')
-    hospital_hospital_idP = models.ForeignKey(Hospital, on_delete=models.CASCADE, related_name='Hospital_hospital_idp')
+    # manger_idmanger = models.ForeignKey(Manger, on_delete=models.CASCADE, related_name='manger_idmanger')
+    # hospital_hospital_idP = models.ForeignKey(Hospital, on_delete=models.CASCADE, related_name='Hospital_hospital_idp')
 
 
 
@@ -91,10 +92,11 @@ class Bed(models.Model):
 
 class Report(models.Model):
     idreport = models.AutoField(primary_key=True)
-    full_report = models.TextField( blank=True, null=True)  # Field renamed to remove unsuitable characters.
+    # full_report = models.TextField( blank=True, null=True)  # Field renamed to remove unsuitable characters.
+    dignose = models.TextField( blank=True, null=True)
     dignose = models.TextField( blank=True, null=True)
     date = models.DateField( blank=True, null=True)
     treatment = models.TextField(blank=True, null=True)
-    required_tests = models.TextField( blank=True, null=True)  # Field renamed to remove unsuitable characters.
+    # required_tests = models.TextField( blank=True, null=True)  # Field renamed to remove unsuitable characters.
     pathient_idpathient = models.ForeignKey(Pathient, on_delete=models.CASCADE, related_name='Pathient_idPathient')  # Field name made lowercase.
     pathient_doctor_iddoctor = models.ForeignKey(Pathient, on_delete=models.CASCADE, related_name='Pathient_doctor_iddoctor')  # Field name made lowercase.
